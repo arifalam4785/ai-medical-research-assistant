@@ -1,0 +1,99 @@
+◇ injected env (1) from .env // tip: ◈ secrets for agents [www.dotenvx.com]
+Server running on port 5001
+
+====================
+Expanded query: treatment+lung+cancer
+
+--- Clean Structured Data ---
+[
+  {
+    id: [32m'41989277'[39m,
+    title: [32m'PubMed Article 41989277'[39m,
+    url: [32m'https://pubmed.ncbi.nlm.nih.gov/41989277'[39m,
+    source: [32m'PubMed'[39m
+  },
+  {
+    id: [32m'41989053'[39m,
+    title: [32m'PubMed Article 41989053'[39m,
+    url: [32m'https://pubmed.ncbi.nlm.nih.gov/41989053'[39m,
+    source: [32m'PubMed'[39m
+  },
+  {
+    id: [32m'41988993'[39m,
+    title: [32m'PubMed Article 41988993'[39m,
+    url: [32m'https://pubmed.ncbi.nlm.nih.gov/41988993'[39m,
+    source: [32m'PubMed'[39m
+  },
+  {
+    id: [32m'41988701'[39m,
+    title: [32m'PubMed Article 41988701'[39m,
+    url: [32m'https://pubmed.ncbi.nlm.nih.gov/41988701'[39m,
+    source: [32m'PubMed'[39m
+  },
+  {
+    id: [32m'41988688'[39m,
+    title: [32m'PubMed Article 41988688'[39m,
+    url: [32m'https://pubmed.ncbi.nlm.nih.gov/41988688'[39m,
+    source: [32m'PubMed'[39m
+  },
+  {
+    id: [32m'https://openalex.org/W1982488143'[39m,
+    title: [32m'Pembrolizumab for the Treatment of Non–Small-Cell Lung Cancer'[39m,
+    url: [32m'https://openalex.org/W1982488143'[39m,
+    source: [32m'OpenAlex'[39m
+  },
+  {
+    id: [32m'https://openalex.org/W2508069933'[39m,
+    title: [32m'Lung cancer: current therapies and new targeted treatments'[39m,
+    url: [32m'https://openalex.org/W2508069933'[39m,
+    source: [32m'OpenAlex'[39m
+  },
+  {
+    id: [32m'https://openalex.org/W2964471257'[39m,
+    title: [32m'Non–Small Cell Lung Cancer: Epidemiology, Screening, Diagnosis, and Treatment'[39m,
+    url: [32m'https://openalex.org/W2964471257'[39m,
+    source: [32m'OpenAlex'[39m
+  },
+  {
+    id: [32m'https://openalex.org/W2466033276'[39m,
+    title: [32m'Non-small cell lung cancer: current treatment and future advances'[39m,
+    url: [32m'https://openalex.org/W2466033276'[39m,
+    source: [32m'OpenAlex'[39m
+  },
+  {
+    id: [32m'https://openalex.org/W2106787323'[39m,
+    title: [32m'Global cancer statistics'[39m,
+    url: [32m'https://openalex.org/W2106787323'[39m,
+    source: [32m'OpenAlex'[39m
+  },
+  {
+    id: [32m'NCT01880515'[39m,
+    title: [32m'Tetracycline as a Prophylaxis for Rash in Patients With NSCLC Receiving Treatment With BIBW2992 (Afatinib)'[39m,
+    url: [32m'https://clinicaltrials.gov/study/NCT01880515'[39m,
+    source: [32m'ClinicalTrials'[39m
+  },
+  {
+    id: [32m'NCT04552535'[39m,
+    title: [32m'A Study in the United States Using Electronic Medical Records (EMR) to Assess Effectiveness of Afatinib (Gilotrif) Following Pembrolizumab and Chemotherapy in the Treatment of Metastatic Squamous Cell Carcinoma of the Lung'[39m,
+    url: [32m'https://clinicaltrials.gov/study/NCT04552535'[39m,
+    source: [32m'ClinicalTrials'[39m
+  },
+  {
+    id: [32m'NCT05054725'[39m,
+    title: [32m'Combination Study of RMC-4630 and Sotorasib for NSCLC Subjects With KRASG12C Mutation After Failure of Prior Standard Therapies'[39m,
+    url: [32m'https://clinicaltrials.gov/study/NCT05054725'[39m,
+    source: [32m'ClinicalTrials'[39m
+  },
+  {
+    id: [32m'NCT04108013'[39m,
+    title: [32m'A Study of SHR-1210 in Combination With Carboplatin+Paclitaxel-albumin in Subjects With Resectable NSCLC'[39m,
+    url: [32m'https://clinicaltrials.gov/study/NCT04108013'[39m,
+    source: [32m'ClinicalTrials'[39m
+  },
+  {
+    id: [32m'NCT06060613'[39m,
+    title: [32m'Safety and Efficacy of OBX-115 in Advanced Solid Tumors'[39m,
+    url: [32m'https://clinicaltrials.gov/study/NCT06060613'[39m,
+    source: [32m'ClinicalTrials'[39m
+  }
+]
