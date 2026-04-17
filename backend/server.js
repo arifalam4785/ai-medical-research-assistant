@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const app = express();
 
@@ -11,6 +12,10 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Curalink Backend API Running 🚀");
 });
+
+const genAI = process.env.GEMINI_API_KEY
+  ? new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
+  : null;
 
 function expandQuery(message) {
   const lower = message.toLowerCase();
@@ -156,16 +161,19 @@ Return response in this JSON format:
 `;
 
   try {
-    const response = await axios.post("http://localhost:11434/api/generate", {
-      model: "llama3",
-      prompt: prompt,
-      stream: false,
-      format: "json"
-    });
+    if (!genAI) {
+      throw new Error("GEMINI_API_KEY is not set");
+    }
 
-    return response.data.response;
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
+
+    // Gemini sometimes wraps JSON in code fences.
+    return typeof text === "string" ? text.replace(/^```json\s*|```$/gim, "").trim() : "";
   } catch (error) {
-    console.error("AI Synthesis Error:", error.message);
+    console.error("Gemini Error:", error.message);
     return "AI synthesis currently unavailable.";
   }
 }
