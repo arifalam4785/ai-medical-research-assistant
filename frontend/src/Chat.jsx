@@ -16,7 +16,12 @@ const Chat = () => {
     setInput("");
     setIsLoading(true);
 
-    const chatUrl = import.meta.env.VITE_CHAT_URL || "http://localhost:5001/chat";
+    const apiBaseUrl = import.meta.env.VITE_API_URL;
+    const explicitChatUrl = import.meta.env.VITE_CHAT_URL;
+    const chatUrl =
+      explicitChatUrl ||
+      (apiBaseUrl ? `${apiBaseUrl.replace(/\/$/, "")}/chat` : null) ||
+      "http://localhost:5000/chat";
 
     try {
       const res = await fetch(chatUrl, {
