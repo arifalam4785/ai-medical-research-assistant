@@ -8,6 +8,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.send("Curalink Backend API Running 🚀");
+});
+
 function expandQuery(message) {
   const lower = message.toLowerCase();
 
