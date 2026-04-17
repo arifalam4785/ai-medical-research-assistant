@@ -161,17 +161,19 @@ Return response in this JSON format:
 `;
 
   try {
-    if (!genAI) {
+    if (!process.env.GEMINI_API_KEY) {
       throw new Error("GEMINI_API_KEY is not set");
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+    const model = genAI.getGenerativeModel({
+      model: "gemini-2.0-flash"
+    });
+
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();
 
-    // Gemini sometimes wraps JSON in code fences.
-    return typeof text === "string" ? text.replace(/^```json\s*|```$/gim, "").trim() : "";
+    return text;
   } catch (error) {
     console.error("Gemini Error:", error.message);
     return "AI synthesis currently unavailable.";
