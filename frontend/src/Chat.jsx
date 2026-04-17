@@ -32,12 +32,33 @@ const Chat = () => {
         body: JSON.stringify({ message: input })
       });
 
-      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(`Request failed: ${res.status} ${res.statusText}`);
+      }
+
+      const data = await res.json().catch(() => null);
+
+      const reply = data?.reply;
+      const normalizedReply =
+        reply && typeof reply === "object"
+          ? {
+              overview: reply.overview ?? "",
+              research: Array.isArray(reply.research) ? reply.research : [],
+              trials: Array.isArray(reply.trials) ? reply.trials : []
+            }
+          : {
+              overview:
+                typeof reply === "string"
+                  ? reply
+                  : "No response received from server.",
+              research: [],
+              trials: []
+            };
 
       const botMessage = { 
-        text: data.reply, 
+        text: normalizedReply,
         sender: "bot",
-        data: data.data // Store raw data for sources
+        data: data?.data // Store raw data for sources
       };
 
       setMessages(prev => [...prev, botMessage]);
@@ -45,7 +66,12 @@ const Chat = () => {
     } catch (error) {
       console.error(error);
       setMessages(prev => [...prev, {
-        text: "Error connecting to the medical server. Please ensure the backend is running.",
+        text: {
+          overview:
+            "Could not reach the backend. If this is deployed, set VITE_API_URL (or VITE_CHAT_URL) to your live backend URL and redeploy the frontend.",
+          research: [],
+          trials: []
+        },
         sender: "bot"
       }]);
     } finally {
@@ -89,9 +115,11 @@ const Chat = () => {
             {msg.sender === "bot" && msg.data && (
               <div className="sources-section">
                 <details>
-                  <summary>View Sources ({msg.data.publications.length + msg.data.trials.length})</summary>
+                  <summary>
+                    View Sources ({(msg.data.publications?.length || 0) + (msg.data.trials?.length || 0)})
+                  </summary>
                   <div className="sources-content">
-                    {msg.data.publications.length > 0 && (
+                    {(msg.data.publications?.length || 0) > 0 && (
                       <div className="source-group">
                         <p style={{ fontWeight: 600, fontSize: '0.8rem', marginTop: '10px' }}>📚 Publications</p>
                         {msg.data.publications.map((p, i) => (
@@ -102,7 +130,7 @@ const Chat = () => {
                         ))}
                       </div>
                     )}
-                    {msg.data.trials.length > 0 && (
+                    {(msg.data.trials?.length || 0) > 0 && (
                       <div className="source-group">
                         <p style={{ fontWeight: 600, fontSize: '0.8rem', marginTop: '10px' }}>🧪 Clinical Trials</p>
                         {msg.data.trials.map((t, i) => (
