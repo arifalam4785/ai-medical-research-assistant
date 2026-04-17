@@ -2,7 +2,6 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
-const OpenAI = require("openai");
 
 const app = express();
 
@@ -12,13 +11,6 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Curalink Backend API Running 🚀");
 });
-
-const groqClient = process.env.GROQ_API_KEY
-  ? new OpenAI({
-      apiKey: process.env.GROQ_API_KEY,
-      baseURL: "https://api.groq.com/openai/v1"
-    })
-  : null;
 
 function expandQuery(message) {
   const lower = message.toLowerCase();
@@ -137,55 +129,32 @@ function rankTrials(trials, query) {
     .slice(0, 4);
 }
 
-async function generateLLMResponse(query, publications, trials) {
-  const prompt = `
-You are a medical research assistant.
+async function generateLLMResponse(query, publications = [], trials = []) {
+  try {
+    const topPubs = publications.slice(0, 5).map((p, i) =>
+      `${i + 1}. ${p.title} (${p.year || "N/A"})`
+    );
 
-User Query:
-${query}
+    const topTrials = trials.slice(0, 3).map((t, i) =>
+      `${i + 1}. ${t.title || t.brief_title || "Clinical trial"}`
+    );
 
-Publications:
-${publications.map(p => p.title).join("\n")}
+    return `
+Overview:
+Based on current research results for "${query}", multiple studies are available.
+
+Key Research:
+${topPubs.length ? topPubs.join("\n") : "No major publications found."}
 
 Clinical Trials:
-${trials.map(t => t.title).join("\n")}
+${topTrials.length ? topTrials.join("\n") : "No active trials found."}
 
-IMPORTANT:
-- Do not hallucinate
-- Use only given data
-
-Return response in this JSON format:
-
-{
-  "overview": "...",
-  "research": ["point1", "point2"],
-  "trials": ["point1", "point2"]
-}
-`;
-
-  try {
-    if (!process.env.GROQ_API_KEY || !groqClient) {
-      throw new Error("GROQ_API_KEY is not set");
-    }
-
-    const completion = await groqClient.chat.completions.create({
-      model: "llama3-70b-8192",
-      messages: [
-        {
-          role: "system",
-          content: "You are a helpful medical research summarizer. Follow the requested JSON output format exactly."
-        },
-        { role: "user",
-          content: prompt
-        }
-      ],
-      temperature: 0.4
-    });
-
-    return completion?.choices?.[0]?.message?.content || "";
-  } catch (error) {
-    console.error("Groq Error:", error.message);
-    return "AI synthesis currently unavailable.";
+Recommendation:
+Consult a qualified healthcare professional for diagnosis or treatment decisions.
+    `.trim();
+  } catch (err) {
+    console.error(err);
+    return "Summary temporarily unavailable.";
   }
 }
 
