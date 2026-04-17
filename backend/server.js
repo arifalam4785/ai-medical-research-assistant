@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const OpenAI = require("openai");
 
 const app = express();
 
@@ -13,8 +13,11 @@ app.get("/", (req, res) => {
   res.send("Curalink Backend API Running 🚀");
 });
 
-const genAI = process.env.GEMINI_API_KEY
-  ? new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
+const groqClient = process.env.GROQ_API_KEY
+  ? new OpenAI({
+      apiKey: process.env.GROQ_API_KEY,
+      baseURL: "https://api.groq.com/openai/v1"
+    })
   : null;
 
 function expandQuery(message) {
@@ -161,21 +164,27 @@ Return response in this JSON format:
 `;
 
   try {
-    if (!process.env.GEMINI_API_KEY) {
-      throw new Error("GEMINI_API_KEY is not set");
+    if (!process.env.GROQ_API_KEY || !groqClient) {
+      throw new Error("GROQ_API_KEY is not set");
     }
 
-    const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash"
+    const completion = await groqClient.chat.completions.create({
+      model: "llama3-70b-8192",
+      messages: [
+        {
+          role: "system",
+          content: "You are a helpful medical research summarizer. Follow the requested JSON output format exactly."
+        },
+        { role: "user",
+          content: prompt
+        }
+      ],
+      temperature: 0.4
     });
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
-
-    return text;
+    return completion?.choices?.[0]?.message?.content || "";
   } catch (error) {
-    console.error("Gemini Error:", error.message);
+    console.error("Groq Error:", error.message);
     return "AI synthesis currently unavailable.";
   }
 }
